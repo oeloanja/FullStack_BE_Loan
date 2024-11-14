@@ -1,9 +1,7 @@
 package com.billit.loan_service.entity;
 
-import com.billit.loan_service.dto.LoanStatusRequest;
 import com.billit.loan_service.enums.LoanStatusType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +17,7 @@ public class LoanStatus {
     @Column(nullable = false)
     private LoanStatusType status;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @MapsId
     @JoinColumn(name = "loan_id")
     private Loan loan;

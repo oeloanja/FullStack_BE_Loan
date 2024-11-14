@@ -1,5 +1,6 @@
 package com.billit.loan_service.entity;
 
+import com.billit.loan_service.enums.LoanStatusType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,14 +44,14 @@ public class Loan {
     @Column
     private Integer accountBorrowId;
 
-    @OneToOne(mappedBy = "loan", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @OneToOne(mappedBy = "loan", cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
     private LoanStatus loanStatus;
 
     public void updateIssueDate(LocalDate issueDate) {
         this.issueDate = issueDate;
     }
 
-    public Loan(Integer userBorrowId, Integer groupId, Integer accountBorrowId, BigDecimal loanAmount, Integer term, BigDecimal intRate, LocalDateTime createdAt) {
+    public Loan(Integer userBorrowId, Integer groupId, Integer accountBorrowId, BigDecimal loanAmount, Integer term, BigDecimal intRate, LocalDateTime createdAt, LoanStatusType statusType) {
         this.userBorrowId = userBorrowId;
         this.groupId = groupId;
         this.accountBorrowId = accountBorrowId;
@@ -58,5 +59,6 @@ public class Loan {
         this.term = term;
         this.intRate = intRate;
         this.createdAt = createdAt;
+        this.loanStatus = new LoanStatus(this, statusType);
     }
 }

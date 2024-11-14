@@ -1,15 +1,15 @@
 package com.billit.loan_service.dto;
 
+import com.billit.loan_service.entity.Loan;
+import com.billit.loan_service.enums.LoanStatusType;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import com.billit.loan_service.entity.Loan;
-import com.billit.loan_service.enums.LoanStatusType;
 
 @Getter
-public class LoanResponse {
+public class LoanResponseDto {
     private final Integer loanId;
     private final Integer userBorrowId;
     private final Integer groupId;
@@ -20,7 +20,7 @@ public class LoanResponse {
     private final LocalDateTime createdAt;
     private final LoanStatusType statusType;
 
-    public LoanResponse(Loan loan) {
+    public LoanResponseDto(Loan loan) {
         this.loanId = loan.getLoanId();
         this.userBorrowId = loan.getUserBorrowId();
         this.groupId = loan.getGroupId();
@@ -32,9 +32,7 @@ public class LoanResponse {
         this.statusType = loan.getLoanStatus().getStatus();
     }
 
-    public static LoanResponse convertToLoanResponse(Loan loan) {
-        return new LoanResponse(loan);
+    public static LoanResponseDto from(Loan loan) {
+        return new LoanResponseDto(loan);
     }
-
-
 }
