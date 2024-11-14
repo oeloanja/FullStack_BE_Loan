@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 public class LoanService {
     private final LoanRepository loanRepository;
-    private final LoanStatusService loanStatusService;
     private CreditEvaluationClient creditEvaluationClient;
     private LoanGroupClient loanGroupClient;
     private BorrowAccountClient borrowAccountClient;

@@ -2,7 +2,6 @@ package com.billit.loan_service.service;
 
 import com.billit.loan_service.dto.LoanStatusRequestDto;
 import com.billit.loan_service.dto.LoanStatusResponseDto;
-import com.billit.loan_service.entity.Loan;
 import com.billit.loan_service.entity.LoanStatus;
 import com.billit.loan_service.enums.LoanStatusType;
 import com.billit.loan_service.repository.LoanRepository;

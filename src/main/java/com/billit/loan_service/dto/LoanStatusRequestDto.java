@@ -1,7 +1,5 @@
 package com.billit.loan_service.dto;
 
-import com.billit.loan_service.entity.Loan;
-import com.billit.loan_service.entity.LoanStatus;
 import com.billit.loan_service.enums.LoanStatusType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

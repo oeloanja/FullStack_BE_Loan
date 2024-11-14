@@ -3,8 +3,6 @@ package com.billit.loan_service.controller;
 
 import com.billit.loan_service.dto.LoanRequestDto;
 import com.billit.loan_service.dto.LoanResponseDto;
-import com.billit.loan_service.entity.LoanStatus;
-import com.billit.loan_service.enums.LoanStatusType;
 import com.billit.loan_service.service.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
