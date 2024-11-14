@@ -10,9 +10,9 @@ import com.billit.loan_service.enums.LoanStatusType;
 
 @Getter
 public class LoanResponse {
-    private final Long loanId;
-    private final Long userBorrowId;
-    private final Long groupId;
+    private final Integer loanId;
+    private final Integer userBorrowId;
+    private final Integer groupId;
     private final BigDecimal loanAmount;
     private final Integer term;
     private final BigDecimal intRate;
@@ -31,4 +31,10 @@ public class LoanResponse {
         this.createdAt = loan.getCreatedAt();
         this.statusType = loan.getLoanStatus().getStatus();
     }
+
+    public static LoanResponse convertToLoanResponse(Loan loan) {
+        return new LoanResponse(loan);
+    }
+
+
 }

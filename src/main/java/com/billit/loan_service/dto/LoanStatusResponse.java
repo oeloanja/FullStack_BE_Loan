@@ -6,11 +6,15 @@ import lombok.Getter;
 
 @Getter
 public class LoanStatusResponse {
-    private final Long loanId;
+    private final Integer loanId;
     private final LoanStatusType statusType;
 
     public LoanStatusResponse(LoanStatus loanStatus) {
         this.loanId = loanStatus.getLoanId();
         this.statusType = loanStatus.getStatus();
+    }
+
+    public static LoanStatusResponse convertToLoanStatusResponse(LoanStatus loanStatus) {
+        return new LoanStatusResponse(loanStatus);
     }
 }

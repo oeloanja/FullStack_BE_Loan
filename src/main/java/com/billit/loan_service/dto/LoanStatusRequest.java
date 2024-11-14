@@ -7,6 +7,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class LoanStatusRequest {
-    private Long loanId;
     private LoanStatusType statusType;
 }
