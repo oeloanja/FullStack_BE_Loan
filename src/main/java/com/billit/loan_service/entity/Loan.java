@@ -51,6 +51,10 @@ public class Loan {
         this.issueDate = issueDate;
     }
 
+    public void assignGroup(Integer groupId) {
+        this.groupId = groupId;
+    }
+
     public Loan(Integer userBorrowId, Integer groupId, Integer accountBorrowId, BigDecimal loanAmount, Integer term, BigDecimal intRate, LocalDateTime createdAt, LoanStatusType statusType) {
         this.userBorrowId = userBorrowId;
         this.groupId = groupId;
@@ -61,4 +65,6 @@ public class Loan {
         this.createdAt = createdAt;
         this.loanStatus = new LoanStatus(this, statusType);
     }
+
+
 }

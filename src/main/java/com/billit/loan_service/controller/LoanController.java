@@ -1,6 +1,7 @@
 package com.billit.loan_service.controller;
 
 
+import com.billit.loan_service.connection.dto.LoanGroupResponseClientDto;
 import com.billit.loan_service.dto.LoanRequestDto;
 import com.billit.loan_service.dto.LoanResponseDto;
 import com.billit.loan_service.service.LoanService;
@@ -21,6 +22,12 @@ public class LoanController {
         return loanService.createLoanSuccess(request);
     }
 
+    // 그룹 배정
+    @PutMapping("/{loanId}/assign-group")
+    public LoanGroupResponseClientDto assignGroupToLoan(@PathVariable Integer loanId) {
+        return loanService.assignGroupToLoan(loanId);
+    }
+
     // 대출 신청 : 거절
     @PostMapping("/register/reject")
     public LoanResponseDto saveLoanReject(@RequestBody LoanRequestDto request) {
@@ -37,6 +44,18 @@ public class LoanController {
     @GetMapping("/detail/{loanId}")
     public LoanResponseDto getLoanById(@PathVariable Integer loanId) {
         return loanService.getLoanById(loanId);
+    }
+
+    //그룹 별 대출 조회
+    @GetMapping("/api/v1/loans/list/{groupId}")
+    public List<LoanResponseDto> getLoansByGroupId(@PathVariable Integer groupId) {
+        return loanService.getLoansByGroupId(groupId);
+    }
+
+    // 이자율 평균 계산
+    @GetMapping("/group/{groupId}/average-rate")
+    public Double getAverageInterestRateByGroupId(@PathVariable Integer groupId) {
+        return loanService.calculateAverageIntRate(groupId);
     }
 
     // 대출 유형 별 조회

@@ -1,26 +1,29 @@
 package com.billit.loan_service.service;
-import com.billit.loan_service.connection.client.BorrowAccountClient;
-import com.billit.loan_service.connection.client.CreditEvaluationClient;
 import com.billit.loan_service.connection.client.LoanGroupClient;
+import com.billit.loan_service.connection.dto.LoanGroupRequestClientDto;
+import com.billit.loan_service.connection.dto.LoanGroupResponseClientDto;
 import com.billit.loan_service.dto.*;
 import com.billit.loan_service.entity.Loan;
 import com.billit.loan_service.enums.LoanStatusType;
 import com.billit.loan_service.repository.LoanRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class LoanService {
     private final LoanRepository loanRepository;
-    private CreditEvaluationClient creditEvaluationClient;
-    private LoanGroupClient loanGroupClient;
-    private BorrowAccountClient borrowAccountClient;
+//    private final CreditEvaluationClient creditEvaluationClient;
+    private final LoanGroupClient loanGroupClient;
+//    private final BorrowAccountClient borrowAccountClient;
 
     // Create
     @Transactional
@@ -30,26 +33,21 @@ public class LoanService {
 //        BorrowAccountResponse borrowAccountResponse = borrowAccountClient.getBorrowAccountId(request.getUserBorrowId());
 //        CreditEvaluationResponse creditEvaluationResponse = creditEvaluationClient.getCreditEvaluation(request.getUserBorrowId());
 //        LoanGroupResponse loanGroupResponse = loanGroupClient.getLoanGroup(request.getUserBorrowId());
+            Loan loan = new Loan(
+                    request.getUserBorrowId(),
+                    null,
+                    // 가상의 값입니다.
+                    11,
+                    //                borrowAccountResponse.getAccountBorrowId();
+                    request.getLoanAmount(),
+                    request.getTerm(),
 
-        Loan loan = new Loan(
-                request.getUserBorrowId(),
-                // 가상의 값입니다.
-                12,
-//                loanGroupResponse.getGroupId(),
+                    // 가상의 값입니다.
+                    new BigDecimal("12.3"),
+                    //                creditEvaluationResponse.getIntRate(),
+                    LocalDateTime.now(),
+                    LoanStatusType.WAITING);
 
-                // 가상의 값입니다.
-                11,
-//                borrowAccountResponse.getAccountBorrowId();
-
-                request.getLoanAmount(),
-                request.getTerm(),
-
-                // 가상의 값입니다.
-                new BigDecimal("12.3"),
-//                creditEvaluationResponse.getIntRate(),
-
-                LocalDateTime.now(),
-                LoanStatusType.WAITING);
         loanRepository.save(loan);
         return LoanResponseDto.from(loan);
     }
@@ -87,9 +85,41 @@ public class LoanService {
                 .orElse(null);
     }
 
+    // 그룹 별 대출 조회
+    public List<LoanResponseDto> getLoansByGroupId(Integer groupId){
+        List<Loan> loans = loanRepository.findByGroupId(groupId);
+        return loans.stream().map(LoanResponseDto::from).toList();
+    }
+
     // 계좌고유번호로 대출 있는지 여부 확인 메소드 (있으면 true, 없으면 false)
     public boolean isExistLoanByUserAccountId(Integer userAccountId){
         List<LoanStatusType> statuses = List.of(LoanStatusType.EXECUTING, LoanStatusType.WAITING, LoanStatusType.OVERDUE);
         return loanRepository.existsByAccountBorrowIdAndLoanStatus_StatusIn(userAccountId, statuses);
     }
+
+    // Update
+    // 그룹 배정 및 업데이트
+    @Transactional
+    public LoanGroupResponseClientDto assignGroupToLoan(Integer loanId) {
+        // Loan 객체를 DB에서 조회
+        Loan loan = loanRepository.findById(Long.valueOf(loanId))
+                .orElseThrow(() -> new EntityNotFoundException("Loan not found with id: " + loanId));
+
+        // LoanGroupRequestClientDto 생성 (loanId만 포함)
+        LoanGroupRequestClientDto requestDto = new LoanGroupRequestClientDto(loan.getLoanId());
+
+        // LoanGroupClient를 사용하여 그룹 배정 API 호출
+        LoanGroupResponseClientDto response = loanGroupClient.registerLoan(requestDto);
+
+        // 응답받은 groupId로 Loan 객체의 groupId 업데이트
+        loan.assignGroup(response.getGroupId());
+        loanRepository.save(loan);
+        return response;
+    }
+
+    // 이자율 평균 계산
+    public Double calculateAverageIntRate(Integer groupId){
+        return loanRepository.findAverageIntRateByGroupId(groupId);
+    }
+
 }

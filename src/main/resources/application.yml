@@ -13,8 +13,17 @@ spring:
 
 logging:
   level:
+    com:
+      billit: debug
     org.hibernate.SQL: debug
     org.hibernate.type: trace
 
 server:
   port: 8083
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full
+        decode404: true

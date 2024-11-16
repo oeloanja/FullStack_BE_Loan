@@ -15,4 +15,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     @Query("SELECT l FROM Loan l WHERE l.userBorrowId = :userBorrowId AND l.loanStatus.status = :status")
     List<Loan> findByUserBorrowIdAndLoanStatus_Status(@Param("userBorrowId") Integer userBorrowId, @Param("status") LoanStatusType status);
     boolean existsByAccountBorrowIdAndLoanStatus_StatusIn(Integer accountBorrowId, List<LoanStatusType> statuses);
+    List<Loan> findByGroupId(Integer groupId);
+    Double findAverageIntRateByGroupId(Integer groupId);
 }
