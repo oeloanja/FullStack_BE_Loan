@@ -47,7 +47,7 @@ public class LoanController {
     }
 
     //그룹 별 대출 조회
-    @GetMapping("/api/v1/loans/list/{groupId}")
+    @GetMapping("/list/{groupId}")
     public List<LoanResponseDto> getLoansByGroupId(@PathVariable Integer groupId) {
         return loanService.getLoansByGroupId(groupId);
     }
