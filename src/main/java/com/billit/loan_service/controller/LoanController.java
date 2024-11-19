@@ -1,7 +1,7 @@
 package com.billit.loan_service.controller;
 
 
-import com.billit.loan_service.connection.dto.LoanGroupResponseClientDto;
+import com.billit.loan_service.connection.loan_group.dto.LoanGroupResponseClientDto;
 import com.billit.loan_service.dto.LoanRequestDto;
 import com.billit.loan_service.dto.LoanResponseDto;
 import com.billit.loan_service.service.LoanService;

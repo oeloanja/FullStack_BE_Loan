@@ -1,4 +1,4 @@
-package com.billit.loan_service.connection.dto;
+package com.billit.loan_service.connection.credit.dto;
 
 import lombok.Getter;
 import java.math.BigDecimal;

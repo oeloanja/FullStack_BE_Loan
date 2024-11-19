@@ -1,7 +1,7 @@
 package com.billit.loan_service.service;
-import com.billit.loan_service.connection.client.LoanGroupClient;
-import com.billit.loan_service.connection.dto.LoanGroupRequestClientDto;
-import com.billit.loan_service.connection.dto.LoanGroupResponseClientDto;
+import com.billit.loan_service.connection.loan_group.client.LoanGroupClient;
+import com.billit.loan_service.connection.loan_group.dto.LoanGroupRequestClientDto;
+import com.billit.loan_service.connection.loan_group.dto.LoanGroupResponseClientDto;
 import com.billit.loan_service.dto.*;
 import com.billit.loan_service.entity.Loan;
 import com.billit.loan_service.enums.LoanStatusType;
@@ -9,13 +9,11 @@ import com.billit.loan_service.repository.LoanRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service

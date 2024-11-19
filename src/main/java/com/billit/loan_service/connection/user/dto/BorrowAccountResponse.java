@@ -1,4 +1,4 @@
-package com.billit.loan_service.connection.dto;
+package com.billit.loan_service.connection.user.dto;
 
 import lombok.Getter;
 

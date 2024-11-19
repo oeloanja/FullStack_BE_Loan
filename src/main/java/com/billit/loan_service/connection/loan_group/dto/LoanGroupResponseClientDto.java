@@ -1,4 +1,4 @@
-package com.billit.loan_service.connection.dto;
+package com.billit.loan_service.connection.loan_group.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;

@@ -1,6 +1,6 @@
-package com.billit.loan_service.connection.client;
+package com.billit.loan_service.connection.credit.client;
 
-import com.billit.loan_service.connection.dto.CreditEvaluationResponse;
+import com.billit.loan_service.connection.credit.dto.CreditEvaluationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

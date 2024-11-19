@@ -1,9 +1,7 @@
-package com.billit.loan_service.connection.dto;
+package com.billit.loan_service.connection.loan_group.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
