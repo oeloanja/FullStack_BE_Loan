@@ -58,15 +58,15 @@ public class LoanController {
         return loanService.calculateAverageIntRate(groupId);
     }
 
-    // 대출 유형 별 조회
-    @GetMapping("/history/{userBorrowId}/{loanStatus}")
-    public List<LoanResponseDto> getUserLoansByStatus(@PathVariable Integer userBorrowId, @PathVariable int loanStatus) {
+    // 대출 상태 별 조회
+    @GetMapping("/history/{userBorrowId}")
+    public List<LoanResponseDto> getUserLoansByStatus(@PathVariable Integer userBorrowId, @RequestParam int loanStatus) {
         return loanService.getUserLoansByStatus(userBorrowId, loanStatus);
     }
 
     // 특정 계좌 대출중 여부 확인
-    @GetMapping("/check/{userBorrowAccountId}")
-    public boolean isExistLoanByUserAccountId(@PathVariable Integer userBorrowAccountId) {
-        return loanService.isExistLoanByUserAccountId(userBorrowAccountId);
+    @GetMapping("/check/{accountBorrowId}")
+    public boolean isExistLoanByUserAccountId(@PathVariable Integer accountBorrowId) {
+        return loanService.isExistLoanByUserAccountId(accountBorrowId);
     }
 }
