@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,6 +36,9 @@ public class LoanStatusService {
         validateStatusTransition(target.getStatus(), newStatus);
         target.updateStatus(newStatus);
 
+        if(request.getStatusAsEnum().equals(LoanStatusType.EXECUTING)){
+            target.getLoan().updateIssueDate(LocalDate.now());
+        }
         return LoanStatusResponseDto.from(target);
     }
 
