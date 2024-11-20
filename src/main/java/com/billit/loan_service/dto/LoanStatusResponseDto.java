@@ -4,6 +4,8 @@ import com.billit.loan_service.entity.LoanStatus;
 import com.billit.loan_service.enums.LoanStatusType;
 import lombok.Getter;
 
+import java.util.Optional;
+
 @Getter
 public class LoanStatusResponseDto {
     private final Integer loanId;

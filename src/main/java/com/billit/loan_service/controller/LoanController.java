@@ -1,6 +1,5 @@
 package com.billit.loan_service.controller;
 
-
 import com.billit.loan_service.connection.loan_group.dto.LoanGroupResponseClientDto;
 import com.billit.loan_service.dto.LoanRequestDto;
 import com.billit.loan_service.dto.LoanResponseDto;
@@ -59,7 +58,7 @@ public class LoanController {
     }
 
     // 대출 상태 별 조회
-    @GetMapping("/history/{userBorrowId}")
+    @GetMapping("/history/{userBorrowId}/filter")
     public List<LoanResponseDto> getUserLoansByStatus(@PathVariable Integer userBorrowId, @RequestParam int loanStatus) {
         return loanService.getUserLoansByStatus(userBorrowId, loanStatus);
     }
