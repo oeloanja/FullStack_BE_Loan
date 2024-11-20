@@ -2,6 +2,7 @@ package com.billit.loan_service.service;
 import com.billit.loan_service.connection.loan_group.client.LoanGroupClient;
 import com.billit.loan_service.connection.loan_group.dto.LoanGroupRequestClientDto;
 import com.billit.loan_service.connection.loan_group.dto.LoanGroupResponseClientDto;
+import com.billit.loan_service.connection.user.client.BorrowAccountClient;
 import com.billit.loan_service.dto.*;
 import com.billit.loan_service.entity.Loan;
 import com.billit.loan_service.enums.LoanStatusType;
