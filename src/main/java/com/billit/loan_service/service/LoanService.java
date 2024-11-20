@@ -2,7 +2,6 @@ package com.billit.loan_service.service;
 import com.billit.loan_service.connection.loan_group.client.LoanGroupClient;
 import com.billit.loan_service.connection.loan_group.dto.LoanGroupRequestClientDto;
 import com.billit.loan_service.connection.loan_group.dto.LoanGroupResponseClientDto;
-import com.billit.loan_service.connection.user.client.BorrowAccountClient;
 import com.billit.loan_service.dto.*;
 import com.billit.loan_service.entity.Loan;
 import com.billit.loan_service.enums.LoanStatusType;
@@ -10,7 +9,6 @@ import com.billit.loan_service.exception.CustomException;
 import com.billit.loan_service.exception.ErrorCode;
 import com.billit.loan_service.exception.LoanValidator;
 import com.billit.loan_service.repository.LoanRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +23,6 @@ public class LoanService {
     private final LoanRepository loanRepository;
 //    private final CreditEvaluationClient creditEvaluationClient;
     private final LoanGroupClient loanGroupClient;
-//    private final BorrowAccountClient borrowAccountClient;
     private final LoanValidator loanValidator;
 
     // Create
@@ -37,16 +34,12 @@ public class LoanService {
             throw new CustomException(ErrorCode.DUPLICATE_LOAN_EXISTS);
         }
 //        연동 대기
-//        BorrowAccountResponse borrowAccountResponse = borrowAccountClient.getBorrowAccountId(request.getUserBorrowId());
 //        CreditEvaluationResponse creditEvaluationResponse = creditEvaluationClient.getCreditEvaluation(request.getUserBorrowId());
-//        LoanGroupResponse loanGroupResponse = loanGroupClient.getLoanGroup(request.getUserBorrowId());
         try{
             Loan loan = new Loan(
                     request.getUserBorrowId(),
                     null,
-                    // 가상의 값입니다.
-                    11,
-                    //                borrowAccountResponse.getAccountBorrowId();
+                    request.getAccountBorrowId(),
                     request.getLoanAmount(),
                     request.getTerm(),
 
