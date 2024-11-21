@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "loan-group-service", url = "http://localhost:8084")
 public interface LoanGroupClient {
-    @PostMapping("/api/v1/loans/group/register")
+    @PostMapping("/api/v1/loan_group/register")
     LoanGroupResponseClientDto registerLoan(@RequestBody LoanGroupRequestClientDto request);
 }

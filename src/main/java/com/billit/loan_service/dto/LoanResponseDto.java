@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class LoanResponseDto {
     private final Integer loanId;
     private final Integer userBorrowId;
+    private final Integer userBorrowAccountId;
     private final Integer groupId;
     private final BigDecimal loanAmount;
     private final Integer term;
@@ -23,6 +24,7 @@ public class LoanResponseDto {
     public LoanResponseDto(Loan loan) {
         this.loanId = loan.getLoanId();
         this.userBorrowId = loan.getUserBorrowId();
+        this.userBorrowAccountId = loan.getAccountBorrowId();
         this.groupId = loan.getGroupId();
         this.loanAmount = loan.getLoanAmount();
         this.term = loan.getTerm();
