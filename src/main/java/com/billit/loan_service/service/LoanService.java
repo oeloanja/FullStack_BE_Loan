@@ -39,7 +39,7 @@ public class LoanService {
             Loan loan = new Loan(
                     request.getUserBorrowId(),
                     null,
-                    request.getUserBorrowAccountId(),
+                    request.getAccountBorrowId(),
                     request.getLoanAmount(),
                     request.getTerm(),
 
