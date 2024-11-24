@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class LoanRequestDto {
     private Integer userBorrowId;
-    private Integer AccountBorrowId;
+    private Integer accountBorrowId;
     private BigDecimal loanAmount;
     private Integer term;
 //    private LoanStatusType status;
