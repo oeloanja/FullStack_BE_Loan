@@ -3,6 +3,7 @@ package com.billit.loan_service.controller;
 import com.billit.loan_service.connection.loan_group.dto.LoanGroupResponseClientDto;
 import com.billit.loan_service.dto.LoanRequestDto;
 import com.billit.loan_service.dto.LoanResponseDto;
+import com.billit.loan_service.dto.RepaymentResponseDto;
 import com.billit.loan_service.service.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,10 @@ public class LoanController {
     public LoanResponseDto getLoanById(@PathVariable Integer loanId) {
         return loanService.getLoanById(loanId);
     }
+
+    // 특정 대출 사용자 정보 조회
+    @GetMapping("/user")
+    public RepaymentResponseDto getLoanUserById(@RequestParam Integer loanId) {return loanService.getLoanUserById(loanId);}
 
     //그룹 별 대출 조회
     @GetMapping("/list/{groupId}")

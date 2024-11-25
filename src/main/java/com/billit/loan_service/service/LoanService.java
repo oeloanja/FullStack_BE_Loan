@@ -89,6 +89,11 @@ public class LoanService {
                 .orElseThrow(() -> new CustomException(ErrorCode.LOAN_NOT_FOUND));
     }
 
+    public RepaymentResponseDto getLoanUserById(Integer loanId){
+        return loanRepository.findById(Long.valueOf(loanId)).map(RepaymentResponseDto::from)
+                .orElseThrow(() -> new CustomException(ErrorCode.LOAN_NOT_FOUND));
+    }
+
     // 그룹 별 대출 조회
     public List<LoanResponseDto> getLoansByGroupId(Integer groupId){
         List<Loan> loans = loanRepository.findByGroupId(groupId);
