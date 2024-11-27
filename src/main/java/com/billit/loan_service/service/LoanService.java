@@ -113,7 +113,6 @@ public class LoanService {
         // Loan 객체를 DB에서 조회
         Loan loan = loanRepository.findById(Long.valueOf(loanId))
                 .orElseThrow(() -> new CustomException(ErrorCode.LOAN_NOT_FOUND));
-
         try{
             // LoanGroupRequestClientDto 생성 (loanId만 포함)
             LoanGroupRequestClientDto requestDto = new LoanGroupRequestClientDto(loan.getLoanId());

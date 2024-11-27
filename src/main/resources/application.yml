@@ -28,7 +28,7 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
 
@@ -36,6 +36,13 @@ eureka:
 feign:
   client:
     config:
-      default:
-        loggerLevel: full
-        decode404: true
+      loan-group-service:
+        url: ${LOAN_GROUP_SERVICE_URL:http://host.docker.internal:8084}
+      invest-service:
+        url: ${INVEST_SERVICE_URL:http://host.docker.internal:8081}
+      repayment-service:
+        url: ${REPAYMENT_SERVICE_URL:http://host.docker.internal:8082}
+      loan-service:
+        url: ${LOAN_SERVICE_URL:http://host.docker.internal:8083}
+      user-service:
+        url: ${USER_SERVICE_URL:http://host.docker.internal:8085}
