@@ -33,8 +33,6 @@ public class LoanService {
         if (isExistLoanByUserAccountId(request.getUserBorrowId())) {
             throw new CustomException(ErrorCode.DUPLICATE_LOAN_EXISTS);
         }
-//        연동 대기
-//        CreditEvaluationResponse creditEvaluationResponse = creditEvaluationClient.getCreditEvaluation(request.getUserBorrowId());
         try{
             Loan loan = new Loan(
                     request.getUserBorrowId(),
@@ -43,9 +41,9 @@ public class LoanService {
                     request.getLoanAmount(),
                     request.getTerm(),
 
-                    // 가상의 값입니다.
+                    // 가상의 값입니다. Client가 body에 담아줄겁니다.
                     new BigDecimal("12.3"),
-                    //                creditEvaluationResponse.getIntRate(),
+                    //                request.getIntRate(),
                     LocalDateTime.now(),
                     LoanStatusType.WAITING);
 

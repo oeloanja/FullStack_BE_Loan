@@ -14,5 +14,5 @@ public class LoanRequestDto {
     private Integer accountBorrowId;
     private BigDecimal loanAmount;
     private Integer term;
-//    private LoanStatusType status;
+//    private BigDecimal intRate;
 }
