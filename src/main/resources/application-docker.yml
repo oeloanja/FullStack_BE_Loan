@@ -26,12 +26,13 @@ server:
   port: 8083
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     service-url:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
     register-with-eureka: true
     fetch-registry: true
-
 
 feign:
   client:
@@ -42,7 +43,7 @@ feign:
         url: ${INVEST_SERVICE_URL:http://invest-service:8081}
       repayment-service:
         url: ${REPAYMENT_SERVICE_URL:http://repayment-service:8082}
-#      loan-service:
-#        url: ${LOAN_SERVICE_URL:http://loan-service:8083}
+      loan-service:
+        url: ${LOAN_SERVICE_URL:http://loan-service:8083}
       user-service:
         url: ${USER_SERVICE_URL:http://user-service:8085}
