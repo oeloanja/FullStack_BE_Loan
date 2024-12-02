@@ -23,7 +23,7 @@ public class LoanValidator {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new CustomException(ErrorCode.INVALID_LOAN_AMOUNT, "대출 금액은 0보다 커야 합니다.");
         }
-        if (amount.compareTo(new BigDecimal("100000000")) > 0) {  // 1억원 초과 검증
+        if (amount.compareTo(new BigDecimal("100000000")) > 0) {
             throw new CustomException(ErrorCode.INVALID_LOAN_AMOUNT, "최대 대출 가능 금액을 초과하였습니다.");
         }
     }

@@ -2,6 +2,7 @@ package com.billit.loan_service.service;
 
 import com.billit.loan_service.dto.LoanStatusRequestDto;
 import com.billit.loan_service.dto.LoanStatusResponseDto;
+import com.billit.loan_service.dto.LoanSuccessStatusRequestDto;
 import com.billit.loan_service.entity.LoanStatus;
 import com.billit.loan_service.enums.LoanStatusType;
 import com.billit.loan_service.exception.CustomException;
@@ -49,6 +50,31 @@ public class LoanStatusService {
 
             if(newStatus == LoanStatusType.EXECUTING) {
                 target.getLoan().updateIssueDate(LocalDate.now());
+            }
+
+            return LoanStatusResponseDto.from(target);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    public LoanStatusResponseDto updateLoanStatusSuccess(LoanSuccessStatusRequestDto request) {
+        LoanStatus target = loanStatusRepository.findByLoanId(request.getLoanId());
+
+        if (target == null) {
+            throw new CustomException(ErrorCode.LOAN_NOT_FOUND);
+        }
+
+        LoanStatusType newStatus = request.getStatusAsEnum();
+        statusValidator.validateStatusNotNull(newStatus);
+
+        try {
+            statusValidator.validateStatusTransition(target.getStatus(), newStatus);
+            target.updateStatus(newStatus);
+
+            if(newStatus == LoanStatusType.EXECUTING) {
+                target.getLoan().updateIssueDate(request.getIssueDate());
             }
 
             return LoanStatusResponseDto.from(target);

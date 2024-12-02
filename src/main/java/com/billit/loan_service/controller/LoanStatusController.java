@@ -2,6 +2,7 @@ package com.billit.loan_service.controller;
 
 import com.billit.loan_service.dto.LoanStatusRequestDto;
 import com.billit.loan_service.dto.LoanStatusResponseDto;
+import com.billit.loan_service.dto.LoanSuccessStatusRequestDto;
 import com.billit.loan_service.service.LoanStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,5 +23,10 @@ public class LoanStatusController {
     @PutMapping("/status")
     public LoanStatusResponseDto updateLoanStatus(@RequestBody LoanStatusRequestDto request) {
         return loanStatusService.updateLoanStatus(request);
+    }
+
+    @PutMapping("/status/success")
+    public LoanStatusResponseDto updateLoanStatusSuccess(@RequestBody LoanSuccessStatusRequestDto request) {
+        return loanStatusService.updateLoanStatusSuccess(request);
     }
 }
