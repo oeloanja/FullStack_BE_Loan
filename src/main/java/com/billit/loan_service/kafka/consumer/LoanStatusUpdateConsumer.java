@@ -1,7 +1,7 @@
 package com.billit.loan_service.kafka.consumer;
 
-import com.billit.common.event.LoanStatusUpdateEvent;
 import com.billit.loan_service.dto.LoanSuccessStatusRequestDto;
+import com.billit.loan_service.kafka.event.LoanStatusUpdateEvent;
 import com.billit.loan_service.service.LoanService;
 import com.billit.loan_service.service.LoanStatusService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class LoanStatusUpdateConsumer {
-    private final LoanService loanService;
     private final LoanStatusService loanStatusService;
 
     @KafkaListener(
