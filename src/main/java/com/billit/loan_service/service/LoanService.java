@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +31,7 @@ public class LoanService {
     // 대출 생성 : 성공
     public LoanResponseDto createLoanSuccess(LoanRequestDto request) {
         loanValidator.validateLoanRequest(request);
-        if (isExistLoanByUserAccountId(request.getUserBorrowId())) {
+        if (isExistLoanByUserBorrowId(request.getUserBorrowId())) {
             throw new CustomException(ErrorCode.DUPLICATE_LOAN_EXISTS);
         }
         try{
@@ -68,13 +69,13 @@ public class LoanService {
 
     // Read
     // 대출 이력(상태 무관) 조회
-    public List<LoanResponseDto> getUserLoanHistory(Integer userBorrowId) {
+    public List<LoanResponseDto> getUserLoanHistory(UUID userBorrowId) {
         List<Loan> loans = loanRepository.findByUserBorrowId(userBorrowId);
         return loans.stream().map(LoanResponseDto::from).toList();
     }
 
     // 대출 유형 별 조회
-    public List<LoanResponseDto> getUserLoansByStatus(Integer userBorrowId, int status) {
+    public List<LoanResponseDto> getUserLoansByStatus(UUID userBorrowId, int status) {
         LoanStatusType loanStatusType = LoanStatusType.values()[status];
         List<Loan> loans = loanRepository.findByUserBorrowIdAndLoanStatus_Status(userBorrowId, loanStatusType);
         return loans.stream().map(LoanResponseDto::from).toList();
@@ -98,8 +99,8 @@ public class LoanService {
         return loans.stream().map(LoanResponseDto::from).toList();
     }
 
-    // 계좌고유번호로 대출 있는지 여부 확인 메소드 (있으면 true, 없으면 false)
-    public boolean isExistLoanByUserAccountId(Integer userBorrowId){
+    // 사용자ID로 대출 있는지 여부 확인 메소드 (있으면 true, 없으면 false)
+    public boolean isExistLoanByUserBorrowId(UUID userBorrowId){
         List<LoanStatusType> statuses = List.of(LoanStatusType.WAITING, LoanStatusType.OVERDUE, LoanStatusType.EXECUTING);
         return loanRepository.existsByUserBorrowIdAndLoanStatus_StatusIn(userBorrowId, statuses);
     }

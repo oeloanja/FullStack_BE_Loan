@@ -7,11 +7,12 @@ import lombok.Getter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 public class LoanResponseDto {
     private final Integer loanId;
-    private final Integer userBorrowId;
+    private final UUID userBorrowId;
     private final Integer accountBorrowId;
     private final Integer groupId;
     private final BigDecimal loanAmount;

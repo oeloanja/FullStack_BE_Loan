@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table
@@ -20,12 +21,12 @@ public class Loan {
     private Integer loanId;
 
     @Column(nullable = false)
-    private Integer userBorrowId;
+    private UUID userBorrowId;
 
     @Column(precision = 15, scale = 2)
     private BigDecimal loanAmount; // 대출 금액
 
-    @Column()
+    @Column
     private Integer term; // 대출 기간
 
     @Column(precision = 5, scale = 2)
@@ -55,7 +56,7 @@ public class Loan {
         this.groupId = groupId;
     }
 
-    public Loan(Integer userBorrowId, Integer groupId, Integer accountBorrowId, BigDecimal loanAmount, Integer term, BigDecimal intRate, LocalDateTime createdAt, LoanStatusType statusType) {
+    public Loan(UUID userBorrowId, Integer groupId, Integer accountBorrowId, BigDecimal loanAmount, Integer term, BigDecimal intRate, LocalDateTime createdAt, LoanStatusType statusType) {
         this.userBorrowId = userBorrowId;
         this.groupId = groupId;
         this.accountBorrowId = accountBorrowId;

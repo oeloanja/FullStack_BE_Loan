@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -36,7 +37,7 @@ public class LoanController {
 
     // 사용자 대출 신청 이력 조회
     @GetMapping("/history/{userBorrowId}")
-    public List<LoanResponseDto> getLoanByUserBorrowId(@PathVariable Integer userBorrowId) {
+    public List<LoanResponseDto> getLoanByUserBorrowId(@PathVariable UUID userBorrowId) {
         return loanService.getUserLoanHistory(userBorrowId);
     }
 
@@ -64,13 +65,7 @@ public class LoanController {
 
     // 대출 상태 별 조회
     @GetMapping("/history/{userBorrowId}/filter")
-    public List<LoanResponseDto> getUserLoansByStatus(@PathVariable Integer userBorrowId, @RequestParam int loanStatus) {
+    public List<LoanResponseDto> getUserLoansByStatus(@PathVariable UUID userBorrowId, @RequestParam int loanStatus) {
         return loanService.getUserLoansByStatus(userBorrowId, loanStatus);
-    }
-
-    // 특정 계좌 대출중 여부 확인
-    @GetMapping("/check/{accountBorrowId}")
-    public boolean isExistLoanByUserAccountId(@PathVariable Integer accountBorrowId) {
-        return loanService.isExistLoanByUserAccountId(accountBorrowId);
     }
 }
