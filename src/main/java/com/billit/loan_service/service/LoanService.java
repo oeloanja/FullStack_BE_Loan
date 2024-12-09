@@ -109,17 +109,12 @@ public class LoanService {
     // 그룹 배정 및 업데이트
     @Transactional
     public LoanGroupResponseClientDto assignGroupToLoan(Integer loanId) {
-        // Loan 객체를 DB에서 조회
         Loan loan = loanRepository.findById(Long.valueOf(loanId))
                 .orElseThrow(() -> new CustomException(ErrorCode.LOAN_NOT_FOUND));
         try{
-            // LoanGroupRequestClientDto 생성 (loanId만 포함)
             LoanGroupRequestClientDto requestDto = new LoanGroupRequestClientDto(loan.getLoanId());
-
-            // LoanGroupClient를 사용하여 그룹 배정 API 호출
             LoanGroupResponseClientDto response = loanGroupClient.registerLoan(requestDto);
 
-            // 응답받은 groupId로 Loan 객체의 groupId 업데이트
             loan.assignGroup(response.getGroupId());
             loanRepository.save(loan);
             return response;
