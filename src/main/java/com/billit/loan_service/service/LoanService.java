@@ -22,7 +22,6 @@ import java.util.UUID;
 @Service
 public class LoanService {
     private final LoanRepository loanRepository;
-//    private final CreditEvaluationClient creditEvaluationClient;
     private final LoanGroupClient loanGroupClient;
     private final LoanValidator loanValidator;
 
@@ -41,10 +40,7 @@ public class LoanService {
                     request.getAccountBorrowId(),
                     request.getLoanAmount(),
                     request.getTerm(),
-
-                    // 가상의 값입니다. Client가 body에 담아줄겁니다.
-                    new BigDecimal("12.3"),
-                    //                request.getIntRate(),
+                    request.getIntRate(),
                     LocalDateTime.now(),
                     LoanStatusType.WAITING);
 

@@ -15,5 +15,5 @@ public class LoanRequestDto {
     private Integer accountBorrowId;
     private BigDecimal loanAmount;
     private Integer term;
-//    private BigDecimal intRate;
+    private BigDecimal intRate;
 }
