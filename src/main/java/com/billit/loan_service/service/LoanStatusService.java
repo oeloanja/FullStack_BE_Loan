@@ -31,6 +31,10 @@ public class LoanStatusService {
         return LoanStatusResponseDto.from(status);
     }
 
+    public boolean isLoanGroupStatusExecuting(Integer groupId){
+        return loanStatusRepository.existsByGroupIdAndStatus(groupId, LoanStatusType.EXECUTING);
+    }
+
     // Update
     // 상태 업데이트
     @Transactional
