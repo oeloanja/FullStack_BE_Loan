@@ -39,6 +39,7 @@ public class LoanService {
                     null,
                     request.getAccountBorrowId(),
                     request.getLoanAmount(),
+                    request.getLoanLimit(),
                     request.getTerm(),
                     request.getIntRate(),
                     LocalDateTime.now(),
@@ -55,7 +56,7 @@ public class LoanService {
     public LoanResponseDto createLoanReject(LoanRequestDto request){
         Loan loan = new Loan(
                 request.getUserBorrowId(),
-                null, null, null, null, null,
+                null, null, null, null, null, null,
                 LocalDateTime.now(),
                 LoanStatusType.REJECTED
         );
@@ -117,6 +118,16 @@ public class LoanService {
         }catch (Exception e){
             throw new CustomException(ErrorCode.GROUP_ASSIGNMENT_FAILED);
         }
+    }
+
+    // 이율 업데이트
+    @Transactional
+    public void updateLoanInterestRate(Integer loanId, BigDecimal newRate) {
+        Loan loan = loanRepository.findById(Long.valueOf(loanId))
+                .orElseThrow(() -> new CustomException(ErrorCode.LOAN_NOT_FOUND));
+
+        loan.updateInterestRate(newRate);
+        loanRepository.save(loan);
     }
 
     // 이자율 평균 계산

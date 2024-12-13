@@ -33,6 +33,9 @@ public class Loan {
     private BigDecimal intRate; // 이자율
 
     @Column
+    private BigDecimal loanLimit;
+
+    @Column
     private LocalDate issueDate; // 대출금 실제 입금일
 
     @CreatedDate
@@ -56,16 +59,20 @@ public class Loan {
         this.groupId = groupId;
     }
 
-    public Loan(UUID userBorrowId, Integer groupId, Integer accountBorrowId, BigDecimal loanAmount, Integer term, BigDecimal intRate, LocalDateTime createdAt, LoanStatusType statusType) {
+    public void updateInterestRate(BigDecimal newRate) {
+        this.intRate = newRate;
+    }
+
+    public Loan(UUID userBorrowId, Integer groupId, Integer accountBorrowId, BigDecimal loanAmount, BigDecimal loanLimit, Integer term, BigDecimal intRate, LocalDateTime createdAt, LoanStatusType statusType) {
         this.userBorrowId = userBorrowId;
         this.groupId = groupId;
         this.accountBorrowId = accountBorrowId;
         this.loanAmount = loanAmount;
+        this.loanLimit = loanLimit;
         this.term = term;
         this.intRate = intRate;
         this.createdAt = createdAt;
         this.loanStatus = new LoanStatus(this, statusType);
     }
-
 
 }

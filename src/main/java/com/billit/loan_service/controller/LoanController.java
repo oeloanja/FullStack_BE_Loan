@@ -8,6 +8,7 @@ import com.billit.loan_service.service.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,6 +62,13 @@ public class LoanController {
     @GetMapping("/group/{groupId}/average-rate")
     public Double getAverageInterestRateByGroupId(@PathVariable Integer groupId) {
         return loanService.calculateAverageIntRate(groupId);
+    }
+
+    @PatchMapping("/{loanId}/update-rate")
+    public void updateLoanInterestRate(
+            @PathVariable Integer loanId,
+            @RequestParam BigDecimal newRate) {
+        loanService.updateLoanInterestRate(loanId, newRate);
     }
 
     // 대출 상태 별 조회
