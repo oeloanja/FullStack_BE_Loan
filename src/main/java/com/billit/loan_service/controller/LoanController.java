@@ -64,7 +64,8 @@ public class LoanController {
         return loanService.calculateAverageIntRate(groupId);
     }
 
-    @PatchMapping("/{loanId}/update-rate")
+    // 이율 업데이트
+    @PutMapping("/{loanId}/update-rate")
     public void updateLoanInterestRate(
             @PathVariable Integer loanId,
             @RequestParam BigDecimal newRate) {

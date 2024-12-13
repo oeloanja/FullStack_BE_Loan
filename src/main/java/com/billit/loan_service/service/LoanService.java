@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -27,13 +28,19 @@ public class LoanService {
 
     // Create
     @Transactional
-    // 대출 생성 : 성공
     public LoanResponseDto createLoanSuccess(LoanRequestDto request) {
         loanValidator.validateLoanRequest(request);
         if (isExistLoanByUserBorrowId(request.getUserBorrowId())) {
             throw new CustomException(ErrorCode.DUPLICATE_LOAN_EXISTS);
         }
-        try{
+
+        try {
+            BigDecimal calculatedInterestRate = calculateInterestRate(
+                    request.getIntRate(),
+                    request.getLoanAmount(),
+                    request.getLoanLimit()
+            );
+
             Loan loan = new Loan(
                     request.getUserBorrowId(),
                     null,
@@ -41,15 +48,34 @@ public class LoanService {
                     request.getLoanAmount(),
                     request.getLoanLimit(),
                     request.getTerm(),
-                    request.getIntRate(),
+                    calculatedInterestRate,
                     LocalDateTime.now(),
-                    LoanStatusType.WAITING);
+                    LoanStatusType.WAITING
+            );
 
             loanRepository.save(loan);
             return LoanResponseDto.from(loan);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private BigDecimal calculateInterestRate(BigDecimal baseInterestRate, BigDecimal loanAmount, BigDecimal loanLimit) {
+        if (loanAmount.compareTo(BigDecimal.ZERO) <= 0 || loanLimit.compareTo(BigDecimal.ZERO) <= 0) {
+            return baseInterestRate;
+        }
+
+        BigDecimal amountRatio = loanAmount.divide(loanLimit, 4, RoundingMode.HALF_UP);
+
+        if (amountRatio.compareTo(new BigDecimal("0.4")) <= 0) {
+            return baseInterestRate;
+        }
+
+        BigDecimal excessRatio = amountRatio.subtract(new BigDecimal("0.4"));
+        BigDecimal rateIncrease = excessRatio.multiply(new BigDecimal("8.333333"))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        return baseInterestRate.add(rateIncrease).setScale(2, RoundingMode.HALF_UP);
     }
 
     // 대출 생성 : 거절
