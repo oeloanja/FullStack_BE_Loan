@@ -14,51 +14,75 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class LoanService {
     private final LoanRepository loanRepository;
-//    private final CreditEvaluationClient creditEvaluationClient;
     private final LoanGroupClient loanGroupClient;
     private final LoanValidator loanValidator;
 
     // Create
     @Transactional
-    // 대출 생성 : 성공
     public LoanResponseDto createLoanSuccess(LoanRequestDto request) {
         loanValidator.validateLoanRequest(request);
-        if (isExistLoanByUserAccountId(request.getUserBorrowId())) {
+        if (isExistLoanByUserBorrowId(request.getUserBorrowId())) {
             throw new CustomException(ErrorCode.DUPLICATE_LOAN_EXISTS);
         }
-        try{
+
+        try {
+            BigDecimal calculatedInterestRate = calculateInterestRate(
+                    request.getIntRate(),
+                    request.getLoanAmount(),
+                    request.getLoanLimit()
+            );
+
             Loan loan = new Loan(
                     request.getUserBorrowId(),
                     null,
                     request.getAccountBorrowId(),
                     request.getLoanAmount(),
+                    request.getLoanLimit(),
                     request.getTerm(),
-
-                    // 가상의 값입니다. Client가 body에 담아줄겁니다.
-                    new BigDecimal("12.3"),
-                    //                request.getIntRate(),
+                    calculatedInterestRate,
                     LocalDateTime.now(),
-                    LoanStatusType.WAITING);
+                    LoanStatusType.WAITING
+            );
 
             loanRepository.save(loan);
             return LoanResponseDto.from(loan);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private BigDecimal calculateInterestRate(BigDecimal baseInterestRate, BigDecimal loanAmount, BigDecimal loanLimit) {
+        if (loanAmount.compareTo(BigDecimal.ZERO) <= 0 || loanLimit.compareTo(BigDecimal.ZERO) <= 0) {
+            return baseInterestRate;
+        }
+
+        BigDecimal amountRatio = loanAmount.divide(loanLimit, 4, RoundingMode.HALF_UP);
+
+        if (amountRatio.compareTo(new BigDecimal("0.4")) <= 0) {
+            return baseInterestRate;
+        }
+
+        BigDecimal excessRatio = amountRatio.subtract(new BigDecimal("0.4"));
+        BigDecimal rateIncrease = excessRatio.multiply(new BigDecimal("8.333333"))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        return baseInterestRate.add(rateIncrease).setScale(2, RoundingMode.HALF_UP);
     }
 
     // 대출 생성 : 거절
     public LoanResponseDto createLoanReject(LoanRequestDto request){
         Loan loan = new Loan(
                 request.getUserBorrowId(),
-                null, null, null, null, null,
+                null, null, null, null, null, null,
                 LocalDateTime.now(),
                 LoanStatusType.REJECTED
         );
@@ -68,13 +92,13 @@ public class LoanService {
 
     // Read
     // 대출 이력(상태 무관) 조회
-    public List<LoanResponseDto> getUserLoanHistory(Integer userBorrowId) {
+    public List<LoanResponseDto> getUserLoanHistory(UUID userBorrowId) {
         List<Loan> loans = loanRepository.findByUserBorrowId(userBorrowId);
         return loans.stream().map(LoanResponseDto::from).toList();
     }
 
     // 대출 유형 별 조회
-    public List<LoanResponseDto> getUserLoansByStatus(Integer userBorrowId, int status) {
+    public List<LoanResponseDto> getUserLoansByStatus(UUID userBorrowId, int status) {
         LoanStatusType loanStatusType = LoanStatusType.values()[status];
         List<Loan> loans = loanRepository.findByUserBorrowIdAndLoanStatus_Status(userBorrowId, loanStatusType);
         return loans.stream().map(LoanResponseDto::from).toList();
@@ -98,8 +122,8 @@ public class LoanService {
         return loans.stream().map(LoanResponseDto::from).toList();
     }
 
-    // 계좌고유번호로 대출 있는지 여부 확인 메소드 (있으면 true, 없으면 false)
-    public boolean isExistLoanByUserAccountId(Integer userBorrowId){
+    // 사용자ID로 대출 있는지 여부 확인 메소드 (있으면 true, 없으면 false)
+    public boolean isExistLoanByUserBorrowId(UUID userBorrowId){
         List<LoanStatusType> statuses = List.of(LoanStatusType.WAITING, LoanStatusType.OVERDUE, LoanStatusType.EXECUTING);
         return loanRepository.existsByUserBorrowIdAndLoanStatus_StatusIn(userBorrowId, statuses);
     }
@@ -108,23 +132,28 @@ public class LoanService {
     // 그룹 배정 및 업데이트
     @Transactional
     public LoanGroupResponseClientDto assignGroupToLoan(Integer loanId) {
-        // Loan 객체를 DB에서 조회
         Loan loan = loanRepository.findById(Long.valueOf(loanId))
                 .orElseThrow(() -> new CustomException(ErrorCode.LOAN_NOT_FOUND));
         try{
-            // LoanGroupRequestClientDto 생성 (loanId만 포함)
             LoanGroupRequestClientDto requestDto = new LoanGroupRequestClientDto(loan.getLoanId());
-
-            // LoanGroupClient를 사용하여 그룹 배정 API 호출
             LoanGroupResponseClientDto response = loanGroupClient.registerLoan(requestDto);
 
-            // 응답받은 groupId로 Loan 객체의 groupId 업데이트
             loan.assignGroup(response.getGroupId());
             loanRepository.save(loan);
             return response;
         }catch (Exception e){
             throw new CustomException(ErrorCode.GROUP_ASSIGNMENT_FAILED);
         }
+    }
+
+    // 이율 업데이트
+    @Transactional
+    public void updateLoanInterestRate(Integer loanId, BigDecimal newRate) {
+        Loan loan = loanRepository.findById(Long.valueOf(loanId))
+                .orElseThrow(() -> new CustomException(ErrorCode.LOAN_NOT_FOUND));
+
+        loan.updateInterestRate(newRate);
+        loanRepository.save(loan);
     }
 
     // 이자율 평균 계산

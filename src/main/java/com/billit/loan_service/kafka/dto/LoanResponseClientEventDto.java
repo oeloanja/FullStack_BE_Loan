@@ -1,20 +1,21 @@
-package com.billit.loan_service.dto;
+package com.billit.loan_service.kafka.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Getter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-public class LoanRequestDto {
-    private UUID userBorrowId;
+@NoArgsConstructor
+public class LoanResponseClientEventDto {
+    private Integer loanId;
+    private Integer groupId;
     private Integer accountBorrowId;
+    private UUID userBorrowId;
     private BigDecimal loanAmount;
     private Integer term;
     private BigDecimal intRate;
-    private BigDecimal loanLimit;
 }

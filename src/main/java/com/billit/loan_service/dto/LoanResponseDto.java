@@ -7,14 +7,16 @@ import lombok.Getter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 public class LoanResponseDto {
     private final Integer loanId;
-    private final Integer userBorrowId;
+    private final UUID userBorrowId;
     private final Integer accountBorrowId;
     private final Integer groupId;
     private final BigDecimal loanAmount;
+    private final BigDecimal loanLimit;
     private final Integer term;
     private final BigDecimal intRate;
     private final LocalDate issueDate;
@@ -27,6 +29,7 @@ public class LoanResponseDto {
         this.accountBorrowId = loan.getAccountBorrowId();
         this.groupId = loan.getGroupId();
         this.loanAmount = loan.getLoanAmount();
+        this.loanLimit = loan.getLoanLimit();
         this.term = loan.getTerm();
         this.intRate = loan.getIntRate();
         this.issueDate = loan.getIssueDate();

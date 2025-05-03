@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Component
 public class LoanValidator {
@@ -42,12 +43,9 @@ public class LoanValidator {
     }
 
     // 대출자 ID 유효성 검사
-    public void validateUserBorrowId(Integer userBorrowId) {
+    public void validateUserBorrowId(UUID userBorrowId) {
         if (userBorrowId == null) {
             throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "대출자 ID는 필수 입력값입니다.");
-        }
-        if (userBorrowId <= 0) {
-            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "유효하지 않은 대출자 ID입니다.");
         }
     }
 

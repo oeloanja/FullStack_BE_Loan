@@ -19,6 +19,12 @@ public class LoanStatusController {
         return loanStatusService.getLoanStatus(loanId);
     }
 
+    // groupId로 대출 상태 조회
+    @GetMapping("/{groupId}/status")
+    public boolean isLoanGroupStatusExecuting(@PathVariable Integer groupId){
+        return loanStatusService.isLoanGroupStatusExecuting(groupId);
+    }
+
     // 대출 상태 업데이트
     @PutMapping("/status")
     public LoanStatusResponseDto updateLoanStatus(@RequestBody LoanStatusRequestDto request) {

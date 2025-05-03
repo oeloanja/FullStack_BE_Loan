@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table
@@ -20,16 +21,19 @@ public class Loan {
     private Integer loanId;
 
     @Column(nullable = false)
-    private Integer userBorrowId;
+    private UUID userBorrowId;
 
     @Column(precision = 15, scale = 2)
     private BigDecimal loanAmount; // 대출 금액
 
-    @Column()
+    @Column
     private Integer term; // 대출 기간
 
     @Column(precision = 5, scale = 2)
     private BigDecimal intRate; // 이자율
+
+    @Column
+    private BigDecimal loanLimit;
 
     @Column
     private LocalDate issueDate; // 대출금 실제 입금일
@@ -55,16 +59,20 @@ public class Loan {
         this.groupId = groupId;
     }
 
-    public Loan(Integer userBorrowId, Integer groupId, Integer accountBorrowId, BigDecimal loanAmount, Integer term, BigDecimal intRate, LocalDateTime createdAt, LoanStatusType statusType) {
+    public void updateInterestRate(BigDecimal newRate) {
+        this.intRate = newRate;
+    }
+
+    public Loan(UUID userBorrowId, Integer groupId, Integer accountBorrowId, BigDecimal loanAmount, BigDecimal loanLimit, Integer term, BigDecimal intRate, LocalDateTime createdAt, LoanStatusType statusType) {
         this.userBorrowId = userBorrowId;
         this.groupId = groupId;
         this.accountBorrowId = accountBorrowId;
         this.loanAmount = loanAmount;
+        this.loanLimit = loanLimit;
         this.term = term;
         this.intRate = intRate;
         this.createdAt = createdAt;
         this.loanStatus = new LoanStatus(this, statusType);
     }
-
 
 }
